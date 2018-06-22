@@ -1,14 +1,14 @@
 /*
-Function to create the store
+Funzione per creare lo store
 */
 function createStore () {
-    // The store should have foru parts
-    // 1. The state
-    // 2. Get the state.
-    // 3. Listen to changes on the state
-    // 4. Update the state
+    // Lo store deve avere 4 parti
+    // 1. lo state
+    // 2. Get dello state.
+    // 3. stare in ascolto dei cambiamenti nello state
+    // 4. aggiornare lo state
 
-    // 1. creo lo state
+    // 1. creo lo state, che conterrà le info dello state della mia app
     let state
 
     // creo un array di listeners
@@ -29,9 +29,7 @@ function createStore () {
     }
 }
 
-// CREIAMO LO STORE
-const store = createStore()
-
+// CREIAMO LO STORE, crei istanze dello store
 // stare in ascolto dei cambiamenti dello store
 const store = createStore()
 
