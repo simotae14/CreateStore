@@ -1,4 +1,15 @@
 /*
+Pure function per modificare lo state in base ad una action
+*/
+function todos (state = [], action) {
+    // controllo il tipo di azione occorsa
+    if (action.type === 'ADD_TODO') {
+        return state.concat([action.todo]);
+    }
+
+    return state;
+}
+/*
 Funzione per creare lo store
 */
 function createStore () {
