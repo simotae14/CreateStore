@@ -11,18 +11,23 @@ function createStore () {
     // 1. creo lo state, che conterrà le info dello state della mia app
     let state
 
-    // creo un array di listeners
+    // creo un array di listeners, ovvero di cose che stanno in ascolto
     let listeners = []
 
     // 2. recupero lo state App
     const getState = () => state
 
-    // creo la funzione subscribe
+    // creo la funzione subscribe che si occuperà di reagire al cambiamento state
     const subscribe = (listener) => {
         listeners.push(listener);
+        // rimuovo dall'ascolto il listener passato in chiamata
+        return () => {
+            listeners = listeners.filter((l) => l !== listener)
+        }
     }
 
     // restituisco un oggetto in cui ci sia una pty per recuperare lo state
+    // una per stare in ascolto dei cambiamenti dello state
     return {
         getState,
         subscribe
@@ -34,12 +39,14 @@ function createStore () {
 const store = createStore()
 
 // il subscribe viene invocato + volte
+// ogni volta che lo store cambia lo state
 // la prima
 store.subscribe(() => {
     console.log('The new state is: ', store.getState());
 })
 
 // le successive
-store.subscribe(() => {
+// tolgo dall'ascolto
+const unsuscribe = store.subscribe(() => {
     console.log('The store changed.');
 })
