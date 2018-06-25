@@ -1,18 +1,4 @@
-/*
-Pure function per modificare lo state in base ad una action
-*/
-function todos (state = [], action) {
-    // controllo il tipo di azione occorsa
-    if (action.type === 'ADD_TODO') {
-        return state.concat([action.todo]);
-    }
-
-    return state;
-}
-/*
-Funzione per creare lo store
-*/
-function createStore () {
+function createStore (reducer) {
     // Lo store deve avere 4 parti
     // 1. lo state
     // 2. Get dello state.
@@ -39,7 +25,7 @@ function createStore () {
 
     // creo il dispatch che si occupa di aggiornare lo state
     const dispatch = (action) => {
-        state = todos(state, action);
+        state = reducer(state, action);
         // invoco tutti i listeners
         listeners.forEach((listener) => listener());
     }
@@ -53,19 +39,20 @@ function createStore () {
     }
 }
 
-// CREIAMO LO STORE, crei istanze dello store
-// stare in ascolto dei cambiamenti dello store
-const store = createStore()
 
-// il subscribe viene invocato + volte
-// ogni volta che lo store cambia lo state
-// la prima
-store.subscribe(() => {
-    console.log('The new state is: ', store.getState());
-})
 
-// le successive
-// tolgo dall'ascolto
-const unsuscribe = store.subscribe(() => {
-    console.log('The store changed.');
-})
+/*
+App Code
+*/
+function todos (state = [], action) {
+    // controllo il tipo di azione occorsa
+    if (action.type === 'ADD_TODO') {
+        return state.concat([action.todo]);
+    }
+
+    return state;
+}
+
+
+// creo lo store passandogli lo Specifico Reducer
+const store = createStore(todos);
