@@ -37,11 +37,19 @@ function createStore () {
         }
     }
 
+    // creo il dispatch che si occupa di aggiornare lo state
+    const dispatch = (action) => {
+        state = todos(state, action);
+        // invoco tutti i listeners
+        listeners.forEach((listener) => listener());
+    }
+
     // restituisco un oggetto in cui ci sia una pty per recuperare lo state
     // una per stare in ascolto dei cambiamenti dello state
     return {
         getState,
-        subscribe
+        subscribe,
+        dispatch
     }
 }
 
