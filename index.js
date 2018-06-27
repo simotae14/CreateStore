@@ -56,3 +56,18 @@ function todos (state = [], action) {
 
 // creo lo store passandogli lo Specifico Reducer
 const store = createStore(todos);
+
+// invoco i 3 metodi disponibile dello store
+store.subscribe(() => {
+    console.log('The new state is: ', store.getState());
+})
+
+// invoco il dispatch per aggiornare lo state dello store
+store.dispatch({
+    type: 'ADD_TODO',
+    todo: {
+        id: 0,
+        name: 'Learn Redux',
+        complete: false
+    }
+});
