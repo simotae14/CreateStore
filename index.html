@@ -238,6 +238,13 @@
         document.getElementById('goalBtn')
             .addEventListener('click', addGoal);
 
+        function createRemoveButton (onClick) {
+            const removeBtn = document.createElement('button');
+            removeBtn.innerHTML = 'X';
+            removeBtn.addEventListener('click', onClick);
+            return removeBtn;
+        }
+
         // creo i metodi per aggiungere gli elementi alla UI nei rispettivi ul
         function addTodoToDOM (todo) {
             // creo il nodo per il li
@@ -245,8 +252,21 @@
             // creo il testo
             const text = document.createTextNode(todo.name);
 
+            // creo il bottone per la rimozione
+            const removeBtn = createRemoveButton(() => {
+                store.dispatch(removeTodoAction(todo.id));
+            })
+
             // inserisco il testo nel nodo creato
             node.appendChild(text);
+            // inserisco il bottone
+            node.appendChild(removeBtn);
+            // gli metto il line-though se è stato completato
+            node.style.textDecoration = todo.complete ? 'line-through' : 'none';
+
+            node.addEventListener('click', () => {
+                store.dispatch(toggleTodoAction(todo.id));
+            });
 
             // ed inserisco il li nell'ul
             document.getElementById('todos')
@@ -259,8 +279,14 @@
             // creo il testo
             const text = document.createTextNode(goal.name);
 
+            // creo il bottone per la rimozione
+            const removeBtn = createRemoveButton(() => {
+                store.dispatch(removeGoalAction(goal.id));
+            });
+
             // inserisco il testo nel nodo creato
             node.appendChild(text);
+            node.appendChild(removeBtn);
 
             // ed inserisco il li nell'ul
             document.getElementById('goals')
