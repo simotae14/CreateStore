@@ -155,7 +155,16 @@
 
         // invoco i 3 metodi disponibile dello store
         store.subscribe(() => {
-            console.log('The new state is: ', store.getState());
+            // recupero i 2 pezzi dello state dal getState
+            const { goals, todos } = store.getState();
+
+            // resetto le ul
+            document.getElementById('todos').innerHTML = '';
+            document.getElementById('goals').innerHTML = '';
+
+            // per ogni elemento chiamo la funzione per aggiungerlo al Dom
+            goals.forEach(addGoalToDOM);
+            todos.forEach(addTodoToDOM);
         })
 
         // invoco il dispatch per aggiornare lo state dello store
@@ -228,6 +237,35 @@
         // aggiungo un listener al bottone per chiamare al click l'addGoal
         document.getElementById('goalBtn')
             .addEventListener('click', addGoal);
+
+        // creo i metodi per aggiungere gli elementi alla UI nei rispettivi ul
+        function addTodoToDOM (todo) {
+            // creo il nodo per il li
+            const node = document.createElement('li');
+            // creo il testo
+            const text = document.createTextNode(todo.name);
+
+            // inserisco il testo nel nodo creato
+            node.appendChild(text);
+
+            // ed inserisco il li nell'ul
+            document.getElementById('todos')
+                .appendChild(node);
+        }
+
+        function addGoalToDOM (goal) {
+            // creo il nodo per il li
+            const node = document.createElement('li');
+            // creo il testo
+            const text = document.createTextNode(goal.name);
+
+            // inserisco il testo nel nodo creato
+            node.appendChild(text);
+
+            // ed inserisco il li nell'ul
+            document.getElementById('goals')
+                .appendChild(node);
+        }
     </script>
 </body>
 </html>
