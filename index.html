@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Udacity Todos Goals</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/redux/3.7.2/redux.min.js"></script>
 </head>
 <body>
     <div>
@@ -23,47 +24,6 @@
         // genero l'Id
         function generateId () {
             return Math.random().toString(36).substring(2) + (new Date()).getTime().toString(36);
-        }
-
-        function createStore (reducer) {
-            // Lo store deve avere 4 parti
-            // 1. lo state
-            // 2. Get dello state.
-            // 3. stare in ascolto dei cambiamenti nello state
-            // 4. aggiornare lo state
-
-            // 1. creo lo state, che conterrà le info dello state della mia app
-            let state
-
-            // creo un array di listeners, ovvero di cose che stanno in ascolto
-            let listeners = []
-
-            // 2. recupero lo state App
-            const getState = () => state
-
-            // creo la funzione subscribe che si occuperà di reagire al cambiamento state
-            const subscribe = (listener) => {
-                listeners.push(listener);
-                // rimuovo dall'ascolto il listener passato in chiamata
-                return () => {
-                    listeners = listeners.filter((l) => l !== listener)
-                }
-            }
-
-            // creo il dispatch che si occupa di aggiornare lo state
-            const dispatch = (action) => {
-                state = reducer(state, action);
-                // invoco tutti i listeners
-                listeners.forEach((listener) => listener());
-            }
-
-            // restituisco un oggetto in cui ci sia una pty per recuperare lo state
-            // una per stare in ascolto dei cambiamenti dello state
-            return {
-                getState,
-                subscribe,
-                dispatch
-            }
         }
 
         const ADD_TODO = 'ADD_TODO';
@@ -143,15 +103,18 @@
         }
 
         // Reducer root per il recupero dei vari state
-        function app (state = {}, action) {
-            return {
-                todos: todos(state.todos, action),
-                goals: goals(state.goals, action)
-            };
-        }
+        // function app (state = {}, action) {
+        //     return {
+        //         todos: todos(state.todos, action),
+        //         goals: goals(state.goals, action)
+        //     };
+        // }
 
         // creo lo store passandogli lo Specifico Reducer
-        const store = createStore(app);
+        const store = Redux.createStore(Redux.combineReducers({
+            todos,
+            goals
+        }));
 
         // invoco i 3 metodi disponibile dello store
         store.subscribe(() => {
