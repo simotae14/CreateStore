@@ -102,13 +102,24 @@
             }
         }
 
-        // Reducer root per il recupero dei vari state
-        // function app (state = {}, action) {
-        //     return {
-        //         todos: todos(state.todos, action),
-        //         goals: goals(state.goals, action)
-        //     };
-        // }
+        // creo una funzione che intercetta una action prima che il dispatch raggiunga il reducer
+        function checkAndDispatch (store, action) {
+            if (
+                action.type === ADD_TODO &&
+                action.todo.name.toLowerCase().includes('bitcoin')
+            ) {
+                return alert('Nope. That\'s a bad idea.');
+            }
+
+            if (
+                action.type === ADD_GOAL &&
+                action.goal.name.toLowerCase().includes('bitcoin')
+            ) {
+                return alert('Nope. That\'s a bad idea.');
+            }
+
+            return store.dispatch(action);
+        }
 
         // creo lo store passandogli lo Specifico Reducer
         const store = Redux.createStore(Redux.combineReducers({
@@ -173,7 +184,7 @@
             // resetto il valore dell'input element a stringa vuota
             input.value = '';
 
-            store.dispatch(addTodoAction({
+            checkAndDispatch(store, addTodoAction({
                 name,
                 complete: false,
                 id: generateId()
@@ -187,7 +198,7 @@
             // resetto il valore dell'input element a stringa vuota
             input.value = '';
 
-            store.dispatch(addGoalAction({
+            checkAndDispatch(store, addGoalAction({
                 name,
                 id: generateId()
             }))
@@ -217,7 +228,7 @@
 
             // creo il bottone per la rimozione
             const removeBtn = createRemoveButton(() => {
-                store.dispatch(removeTodoAction(todo.id));
+                checkAndDispatch(store, removeTodoAction(todo.id));
             })
 
             // inserisco il testo nel nodo creato
@@ -228,7 +239,7 @@
             node.style.textDecoration = todo.complete ? 'line-through' : 'none';
 
             node.addEventListener('click', () => {
-                store.dispatch(toggleTodoAction(todo.id));
+                checkAndDispatch(store, toggleTodoAction(todo.id));
             });
 
             // ed inserisco il li nell'ul
@@ -244,7 +255,7 @@
 
             // creo il bottone per la rimozione
             const removeBtn = createRemoveButton(() => {
-                store.dispatch(removeGoalAction(goal.id));
+                checkAndDispatch(store, removeGoalAction(goal.id));
             });
 
             // inserisco il testo nel nodo creato
