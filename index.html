@@ -122,11 +122,22 @@
             return next(action);
         }
 
+        // creo il middleware LOGGER
+        const logger = (store) => (next) => (action) => {
+            console.group(action.type)
+                console.log('The action: ', action);
+                const result = next(action);
+                console.log('The new state: ', store.getState());
+            console.groupEnd()
+
+            return result;
+        }
+
         // creo lo store passandogli lo Specifico Reducer
         const store = Redux.createStore(Redux.combineReducers({
             todos,
             goals
-        }), Redux.applyMiddleware(checker));
+        }), Redux.applyMiddleware(checker, logger));
 
         // invoco i 3 metodi disponibile dello store
         store.subscribe(() => {
