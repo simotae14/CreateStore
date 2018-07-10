@@ -24,6 +24,7 @@
         const TOGGLE_TODO = 'TOGGLE_TODO';
         const ADD_GOAL = 'ADD_GOAL';
         const REMOVE_GOAL = 'REMOVE_GOAL';
+        const RECEIVE_DATA = 'RECEIVE_DATA';
 
         function addTodoAction (todo) {
             return {
@@ -60,6 +61,15 @@
             }
         }
 
+        // action creator per aggiungere allo store i dati iniziali recuperati per goals e todos
+        function receiveDataAction (todos, goals) {
+            return {
+                type: RECEIVE_DATA,
+                todos,
+                goals
+            }
+        }
+
         /*
         App Code
         */
@@ -76,6 +86,8 @@
                     // modifico il valore del complete per il dato todo
                     return state.map((todo) => todo.id !== action.id ? todo :
                         Object.assign({}, todo, { complete: !todo.complete }));
+                case RECEIVE_DATA :
+                    return action.todos
                 default:
                     return state;
             }
@@ -90,6 +102,8 @@
                 case REMOVE_GOAL :
                     // rimuovo il goal passato
                     return state.filter((goal) => goal.id !== action.id);
+                case RECEIVE_DATA :
+                    return action.goals
                 default:
                     return state;
             }
@@ -233,6 +247,16 @@
             // uso il lifecycle method per il subscribe
             componentDidMount () {
                 const { store } = this.props;
+
+                // recupero i dati dalla API
+                Promise.all([
+                    API.fetchTodos(),
+                    API.fetchGoals()
+                ]).then(([ todos, goals ])=> {
+                    // dispatcho l'action receiveData
+                    store.dispatch(receiveDataAction(todos, goals));
+                })
+
                 store.subscribe(() => this.forceUpdate())
             }
             render() {
