@@ -109,6 +109,16 @@
             }
         }
 
+        function loading (state = true, action) {
+            // creo lo switch
+            switch(action.type) {
+                case RECEIVE_DATA :
+                    return false;
+                default:
+                    return state;
+            }
+        }
+
         // creo una funzione che intercetta una action prima che il dispatch raggiunga il reducer
         // creo il MIDDLEWARE
         const checker = (store) => (next) => (action) => {
@@ -143,7 +153,8 @@
         // creo lo store passandogli lo Specifico Reducer
         const store = Redux.createStore(Redux.combineReducers({
             todos,
-            goals
+            goals,
+            loading
         }), Redux.applyMiddleware(checker, logger));
 
 
@@ -261,7 +272,14 @@
             }
             render() {
                 const { store } = this.props;
-                const { todos, goals } = store.getState();
+                const { todos, goals, loading } = store.getState();
+
+                // se c'è il loading mostro messaggio caricamento
+                if (loading) {
+                    return(
+                        <h3>Loading</h3>
+                    )
+                }
 
                 return (
                     <div>
