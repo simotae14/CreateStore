@@ -133,6 +133,19 @@
             }
         }
 
+        // action creator per Caricare i dati Iniziali
+        function handleInitialData () {
+            return (dispatch) => {
+                // recupero i dati dalla API
+                Promise.all([
+                    API.fetchTodos(),
+                    API.fetchGoals()
+                ]).then(([ todos, goals ])=> {
+                    // dispatcho l'action receiveData
+                    dispatch(receiveDataAction(todos, goals));
+                })
+            }
+        }
 
         /*
         App Code
@@ -331,14 +344,8 @@
             componentDidMount () {
                 const { store } = this.props;
 
-                // recupero i dati dalla API
-                Promise.all([
-                    API.fetchTodos(),
-                    API.fetchGoals()
-                ]).then(([ todos, goals ])=> {
-                    // dispatcho l'action receiveData
-                    store.dispatch(receiveDataAction(todos, goals));
-                })
+                // action creator per il recupero dei dati iniziali
+                store.dispatch(handleInitialData());
 
                 store.subscribe(() => this.forceUpdate())
             }
