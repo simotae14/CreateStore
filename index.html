@@ -71,6 +71,21 @@
             }
         }
 
+        // action creator per Aggiungere un Todo
+        function handleAddTodo (name, callback) {
+            return (dispatch) => {
+                return API.saveTodo(name)
+                    .then((todo) => {
+                        dispatch(addTodoAction(todo));
+                        callback();
+                    })
+                    .catch(() => {
+                        alert('There was an error. Try again.');
+                    })
+            }
+        }
+
+
         function handleDeleteTodo (todo) {
             return (dispatch) => {
                 dispatch(removeTodoAction(todo.id));
@@ -82,13 +97,24 @@
             }
         }
 
+        function handleToggleTodo (id) {
+            return (dispatch) => {
+                dispatch(toggleTodoAction(id));
+                return API.saveTodoToggle(id)
+                    .catch(() => {
+                        dispatch(toggleTodoAction(id));
+                        alert('An error occurred. Try again.');
+                    })
+            }
+        }
+
         // action creator per Aggiungere un Goal
-        function handleAddGoal (name, cb) {
+        function handleAddGoal (name, callback) {
             return (dispatch) => {
                 return API.saveGoal(name)
                     .then((goal) => {
                         dispatch(addGoalAction(goal));
-                        cb();
+                        callback();
                     })
                     .catch(() => alert('There was an error. Try again.'));
             }
@@ -106,6 +132,7 @@
                     })
             }
         }
+
 
         /*
         App Code
@@ -232,27 +259,17 @@
             addItem = (e) => {
                 e.preventDefault();
 
-                // Invoco la API
-                return API.saveTodo(this.input.value)
-                    .then((todo) => {
-                        this.props.store.dispatch(addTodoAction(todo));
-                        // resetto input
-                        this.input.value = '';
-                    })
-                    .catch(() => {
-                        alert('There is an error. Try again.')
-                    })
+                // nuovo action creator
+                this.props.store.dispatch(handleAddTodo(
+                    this.input.value,
+                    () => this.input.value = ''
+                ));
             }
             removeItem = (todo) => {
                 this.props.store.dispatch(handleDeleteTodo(todo));
             }
             toggleItem = (id) => {
-                this.props.store.dispatch(toggleTodoAction(id));
-                return API.saveTodoToggle(id)
-                    .catch(() => {
-                        this.props.store.dispatch(toggleTodoAction(id));
-                        alert('An error occurred. Try again.');
-                    })
+                this.props.store.dispatch(handleToggleTodo(id));
             }
             render() {
                 return (
