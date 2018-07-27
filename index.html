@@ -273,16 +273,16 @@
                 e.preventDefault();
 
                 // nuovo action creator
-                this.props.store.dispatch(handleAddTodo(
+                this.props.dispatch(handleAddTodo(
                     this.input.value,
                     () => this.input.value = ''
                 ));
             }
             removeItem = (todo) => {
-                this.props.store.dispatch(handleDeleteTodo(todo));
+                this.props.dispatch(handleDeleteTodo(todo));
             }
             toggleItem = (id) => {
-                this.props.store.dispatch(handleToggleTodo(id));
+                this.props.dispatch(handleToggleTodo(id));
             }
             render() {
                 return (
@@ -304,11 +304,26 @@
             }
         }
 
+        class ConnectedTodos extends React.Component {
+            render() {
+                return (
+                    <Context.Consumer>
+                        {
+                            (store) => {
+                                const { todos } = store.getState();
+                                return <Todos todos={todos} dispatch={store.dispatch} />;
+                            }
+                        }
+                    </Context.Consumer>
+                );
+            }
+        }
+
         class Goals extends React.Component {
             addItem = (e) => {
                 e.preventDefault();
                 // invoco il nuovo action creator
-                this.props.store.dispatch(handleAddGoal(
+                this.props.dispatch(handleAddGoal(
                     this.input.value,
                     // callback per resettare input
                     () => this.input.value = ''
@@ -316,7 +331,7 @@
             }
             removeItem = (goal) => {
                 // invoco un nuovo action creator cui delego il compito di invocare l'aPI e salvare nello store
-                this.props.store.dispatch(handleDeleteGoal(
+                this.props.dispatch(handleDeleteGoal(
                     goal
                 ))
             }
@@ -339,6 +354,23 @@
             }
         }
 
+        class ConnectedGoals extends React.Component {
+            render() {
+                return (
+                    <Context.Consumer>
+                        {
+                            (store) => {
+                                const { goals } = store.getState();
+
+                                return <Goals goals={goals} dispatch={store.dispatch} />;
+
+                            }
+                        }
+                    </Context.Consumer>
+                );
+            }
+        }
+
         class App extends React.Component {
             // uso il lifecycle method per il subscribe
             componentDidMount () {
@@ -351,7 +383,7 @@
             }
             render() {
                 const { store } = this.props;
-                const { todos, goals, loading } = store.getState();
+                const { loading } = store.getState();
 
                 // se c'è il loading mostro messaggio caricamento
                 if (loading) {
@@ -362,21 +394,43 @@
 
                 return (
                     <div>
-                        <Todos
-                            todos={todos}
-                            store={this.props.store}
-                         />
-                        <Goals
-                            goals={goals}
-                            store={this.props.store}
-                        />
+                        <ConnectedTodos />
+                        <ConnectedGoals />
                     </div>
                 );
             }
         }
 
+        class ConnectedApp extends React.Component {
+            render() {
+                return (
+                    <Context.Consumer>
+                        {
+                            (store) => (
+                                <App store={store} />
+                            )
+                        }
+                    </Context.Consumer>
+                );
+            }
+        }
+
+        const Context = React.createContext();
+
+        class Provider extends React.Component {
+            render () {
+                return (
+                    <Context.Provider value={this.props.store}>
+                        { this.props.children }
+                    </Context.Provider>
+                )
+            }
+        }
+
         ReactDOM.render(
-            <App store={store} />,
+            <Provider store={store}>
+                <ConnectedApp />
+            </Provider>,
             document.getElementById('app')
         )
     </script>
