@@ -24,51 +24,7 @@
         /*
         App Code
         */
-        // Reducer per i todo
-        function todos (state = [], action) {
-            // creo uno switch
-            switch(action.type) {
-                case ADD_TODO :
-                    return state.concat([action.todo]);
-                case REMOVE_TODO :
-                    // rimuovo il todo passato
-                    return state.filter((todo) => todo.id !== action.id);
-                case TOGGLE_TODO :
-                    // modifico il valore del complete per il dato todo
-                    return state.map((todo) => todo.id !== action.id ? todo :
-                        Object.assign({}, todo, { complete: !todo.complete }));
-                case RECEIVE_DATA :
-                    return action.todos
-                default:
-                    return state;
-            }
-        }
 
-        // Reducer per i goal che sono obiettivi a lungo termine
-        function goals (state = [], action) {
-            // creo uno switch
-            switch(action.type) {
-                case ADD_GOAL :
-                    return state.concat([action.goal]);
-                case REMOVE_GOAL :
-                    // rimuovo il goal passato
-                    return state.filter((goal) => goal.id !== action.id);
-                case RECEIVE_DATA :
-                    return action.goals
-                default:
-                    return state;
-            }
-        }
-
-        function loading (state = true, action) {
-            // creo lo switch
-            switch(action.type) {
-                case RECEIVE_DATA :
-                    return false;
-                default:
-                    return state;
-            }
-        }
 
         // creo una funzione che intercetta una action prima che il dispatch raggiunga il reducer
         // creo il MIDDLEWARE
