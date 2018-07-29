@@ -4,6 +4,10 @@ import {
     TOGGLE_TODO
 } from '../actions/todos';
 
+import {
+    RECEIVE_DATA
+} from '../actions/shared';
+
 // Reducer per i todo
 export default function todos (state = [], action) {
     // creo uno switch

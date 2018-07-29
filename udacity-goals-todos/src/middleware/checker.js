@@ -1,3 +1,4 @@
+import { ADD_GOAL } from '../actions/goals';
 import { ADD_TODO } from '../actions/todos';
 
 // creo una funzione che intercetta una action prima che il dispatch raggiunga il reducer

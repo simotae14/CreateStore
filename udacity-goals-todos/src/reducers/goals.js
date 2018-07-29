@@ -3,6 +3,10 @@ import {
     REMOVE_GOAL
 } from '../actions/goals';
 
+import {
+    RECEIVE_DATA
+} from '../actions/shared';
+
 // Reducer per i goal che sono obiettivi a lungo termine
 export default function goals (state = [], action) {
     // creo uno switch
